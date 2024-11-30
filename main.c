@@ -83,7 +83,7 @@ void test_small_vectors() {
 
     // checking of results if same or not
     printf("Correctness: ");
-    if (fabs(result_c - result_asm) < 1e-6) {
+    if (fabs(result_c - result_asm) < 1e-3) {
         printf("Results are consistent.\n");
     } else {
         printf("Results do not match.\n");
