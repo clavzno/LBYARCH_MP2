@@ -2,7 +2,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
-#include <malloc.h>
+#include <malloc.h> //for memory allocation
 
 
 extern  void dot_product();
