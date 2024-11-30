@@ -4,7 +4,7 @@ section .text
     global dot_product
 
 dot_product:
-    movsd xmm0, 0
+    xorps xmm0, xmm0
 
 L1:
     test rcx, rcx
