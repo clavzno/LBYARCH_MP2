@@ -7,8 +7,11 @@ sdot = \sum_{i=1}^{n} a_i b_i = a_1*b_1 + a_2*b_2 + ... + a_n*b_n
 
 ## How to run
 nasm -f elf64 -o dot_product.o dot_product.asm
+
 gcc -std=c99 -c -o main.o main.c
+
 gcc -std=c99 -o main.exe main.o dot_product.o -lm
+
 main.exe
 
 ## Comparative Execution time and short analysis of the performance of the kernels
