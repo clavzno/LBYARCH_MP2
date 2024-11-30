@@ -8,7 +8,7 @@ dot_product:
 
 L1:
     test rcx, rcx
-    jz .done
+    jz done
     movsd xmm1, [rdx]
     movsd xmm2, [r8]
     mulsd xmm1, xmm2
