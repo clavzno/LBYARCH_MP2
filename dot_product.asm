@@ -6,7 +6,7 @@ section .text
 dot_product:
     movsd xmm0, 0
 
-.L1:
+L1:
     test rcx, rcx
     jz .done
     movsd xmm1, [rdx]
@@ -16,8 +16,8 @@ dot_product:
     add rdx, 8
     add r8, 8
     dec rcx
-    jmp .L1
+    jmp L1
 
-.done:
+done:
     movsd [r9], xmm0
     ret
