@@ -1,5 +1,13 @@
 #include <stdio.h>
 #include <float.h>
+#include <math.h>
+#include <stdlib.h>
+#include <malloc.h>
+
+
+extern  void dot_product();
+
+
 // write a c program that 
 int main() {
     int length; 
