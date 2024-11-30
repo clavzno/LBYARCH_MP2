@@ -1,85 +1,150 @@
 #include <stdio.h>
-#include <float.h>
-#include <math.h>
 #include <stdlib.h>
-#include <malloc.h> //for memory allocation
-#include "timer.c"
+#include <malloc.h> //memory alloc
+#include <stdint.h>
+#include <math.h>
+#include <time.h>
 
-extern  void dot_product();
+extern void dot_product(int size, double* vec1, double* vec2, double* result);
 
-
-// write a c program that 
-double dot_product(double *A, double *B, int n)
-{
-    double sdot = 0.0;
-    for (int i = 0; i < n; ++i)
-    {
-        sdot += A[i] * B[i];
+// user input initialization of vectors
+void initialize_vectors_from_user(double* vec1, double* vec2, int size) {
+    printf("Enter %d elements for vector 1:\n", size);
+    for (int i = 0; i < size; i++) {
+        printf("vec1[%d]: ", i);
+        scanf("%lf", &vec1[i]);
     }
-    return sdot;
+
+    printf("Enter %d elements for vector 2:\n", size);
+    for (int i = 0; i < size; i++) {
+        printf("vec2[%d]: ", i);
+        scanf("%lf", &vec2[i]);
+    }
 }
 
-long runtwenty( double *A, double *B, int n)
-{
-    long averageExecutionTime = 0;
-    long start, end, executionTime;
-    for (int i = 0; i < 20; ++i)
-    {
-        printf("ITERATION # %d\n", i);
-        start = currentTimeMillis();
-        printf("Start time: %ld\n", start);
-        //run dot prod
-        double sdot = dot_product(A, B, n);
-        end = currentTimeMillis();
-        printf("End time: %ld\n", end);
-        printf("Dot product: %f\n", sdot);
-        averageExecutionTime += executionTime; // add to overall average
-        printf("Current Total Average Execution Time: %ld\n", averageExecutionTime);
+// random initialization of large vectors
+void auto_initialize_vectors(double* vec1, double* vec2, int size) {
+    srand((unsigned)time(NULL)); //random generator
+    for (int i = 0; i < size; i++) {
+        vec1[i] = (double)rand() / RAND_MAX * 10.0; // random double in range [0.0, 10.0]
+        vec2[i] = (double)rand() / RAND_MAX * 10.0;
     }
-    
-    return averageExecutionTime/20; //returns average execution time
 }
 
-int main()
-{
-    int n;
-    double A[100], B[100]; // assume a max vector length of 100
+// dot product calculation for c
+void calculate_dot_product_c(int size, double* vec1, double* vec2, double* result) {
+    *result = 0.0;
+    for (int i = 0; i < size; i++) {
+        *result += vec1[i] * vec2[i];
+    }
+}
 
-    printf("Enter the vector length (n): ");
-    if (scanf("%d", &n) != 1 || n <= 0)
-    {
-        printf("Invalid input. Please enter a positive integer.\n");
-        while (getchar() != '\n'); // Clear input buffer
+// measure execution time for a dot product calculation function
+double compute_execution_time(void (*dot_func)(int, double*, double*, double*), int size, double* vec1, double* vec2, double* result) {
+    double total_duration = 0.0;
+    for (int i = 0; i < 20; i++) {
+        clock_t start_time = clock();
+        dot_func(size, vec1, vec2, result);
+        clock_t end_time = clock();
+        total_duration += (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    }
+    return total_duration / 20.0;
+}
+
+// test function for small-sized vectors
+void test_small_vectors() {
+    int size;
+    printf("Enter the size of the vectors: ");
+    scanf("%d", &size);
+
+    if (size <= 0) {
+        fprintf(stderr, "Invalid size. Please provide a positive integer.\n");
+        return;
     }
 
-    printf("Enter the elements of vector A:\n");
-    for (int i = 0; i < n; ++i)
-    {
-        if (scanf("%lf", &A[i]) != 1)
-        {
-            printf("Invalid input. Please enter a valid number.\n");
-            while (getchar() != '\n'); // Clear input buffer
-            break;
+    // allocate memory
+    double *vec1 = (double*)_aligned_malloc(size * sizeof(double), 16);
+    double *vec2 = (double*)_aligned_malloc(size * sizeof(double), 16);
+    double result_c, result_asm;
+
+    if (!vec1 || !vec2) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        return;
+    }
+
+    // collect user inputs for vectors
+    initialize_vectors_from_user(vec1, vec2, size);
+
+    // compute and verify results
+    printf("\nDot Product Validation (size = %d)\n", size);
+    calculate_dot_product_c(size, vec1, vec2, &result_c);
+    dot_product(size, vec1, vec2, &result_asm);
+    printf("C Implementation: %.3f ---- Assembly Implementation: %.3f\n", result_c, result_asm);
+
+    // checking of results if same or not
+    printf("Correctness: ");
+    if (fabs(result_c - result_asm) < 1e-6) {
+        printf("Results are consistent.\n");
+    } else {
+        printf("Results do not match.\n");
+    }
+
+    // free allocated memory
+    _aligned_free(vec1);
+    _aligned_free(vec2);
+}
+
+// large vectors with random initialization
+void test_large_vectors() {
+    int vector_sizes[] = {1 << 20, 1 << 24, 1 << 28}; //2^20, 2^24, 2^28 -> since laptop cant do 2^30
+    int count_sizes = sizeof(vector_sizes) / sizeof(vector_sizes[0]);
+
+    for (int i = 0; i < count_sizes; i++) {
+        int size = vector_sizes[i];
+
+        // to allocate memory
+        double *vec1 = (double*)_aligned_malloc(size * sizeof(double), 16);
+        double *vec2 = (double*)_aligned_malloc(size * sizeof(double), 16);
+        double result_c, result_asm;
+
+        if (!vec1 || !vec2) {
+            fprintf(stderr, "Memory allocation failed.\n");
+            return;
         }
-    }
 
-    printf("Enter the elements of vector B:\n");
-    for (int i = 0; i < n; ++i)
-    {
-        if (scanf("%lf", &B[i]) != 1)
-        {
-            printf("Invalid input. Please enter a valid number.\n");
-            while (getchar() != '\n'); // Clear input buffer
-            break;
+        // randomly initialize vectors
+        auto_initialize_vectors(vec1, vec2, size);
+
+        printf("\nLarge Vector Computation (size = %d)\n", size);
+        printf("C Implementation:\n");
+        double avg_time_c = compute_execution_time(calculate_dot_product_c, size, vec1, vec2, &result_c);
+        printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_c, result_c);
+
+        printf("Assembly Implementation:\n");
+        double avg_time_asm = compute_execution_time((void (*)(int, double*, double*, double*))dot_product, size, vec1, vec2, &result_asm);
+        printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_asm, result_asm);
+
+       // checking of results if same or not
+        printf("Correctness: ");
+        if (fabs(result_c - result_asm) < 1e-6) {
+            printf("Results are consistent.\n");
+        } else {
+            printf("Results do not match.\n");
         }
+
+        // free allocated memory
+        _aligned_free(vec1);
+        _aligned_free(vec2);
     }
+}
 
-    double sdot = dot_product(A, B, n);
-    printf("Dot product: %f\n", sdot);
+int main() {
+    printf("\nSmall Vector Test - User Input\n");
+    test_small_vectors();
 
-    printf("RUNNING 20 TIMES...\n");
-    long time = runtwenty(A, B, n);
-    printf("Time taken: %ld ms\n", time);
+    printf("\nLarge Vector Tests - Random Initialization\n");
+    test_large_vectors();
 
+    printf("\nCompleted\n");
     return 0;
 }
