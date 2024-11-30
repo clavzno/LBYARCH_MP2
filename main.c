@@ -1,7 +1,14 @@
 #include <stdio.h>
+#include <float.h>
+#include <math.h>
+#include <stdlib.h>
+#include <malloc.h> //for memory allocation
 #include "timer.c"
-extern int asmdot(int n, double *A, double *B);
 
+extern  void dot_product();
+
+
+// write a c program that 
 double dot_product(double *A, double *B, int n)
 {
     double sdot = 0.0;
