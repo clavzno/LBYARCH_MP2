@@ -85,9 +85,20 @@ void test_small_vectors() {
 
     // compute and verify results
     printf("\nDot Product Validation (size = %d)\n", size);
-    calculate_dot_product_c(size, vec1, vec2, &result_c);
-    dot_product(size, vec1, vec2, &result_asm);
-    printf("C Implementation: %.3f ---- Assembly Implementation: %.3f\n", result_c, result_asm);
+    //calculate_dot_product_c(size, vec1, vec2, &result_c);
+    //dot_product(size, vec1, vec2, &result_asm);
+    //printf("C Implementation: %.3f ---- Assembly Implementation: %.3f\n", result_c, result_asm);
+
+    //TODO double check this later
+    printf("C Implementation:\n");
+    double avg_time_c = compute_execution_time(calculate_dot_product_c, size, vec1, vec2, &result_c);
+    printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_c, result_c);
+    printf("Assembly Implementation:\n");
+    double avg_time_asm = compute_execution_time((void (*)(int, double*, double*, double*))dot_product, size, vec1, vec2, &result_asm);
+    printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_asm, result_asm);
+
+    printf("C implementation vs ASM implmenetation time difference:");
+    printf("%.6f", avg_time_c-avg_time_asm);
 
     // checking of results if same or not
     printf("Correctness: ");
