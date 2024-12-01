@@ -8,6 +8,10 @@
 #include <time.h>
 // #include "timer.c" can't be used anymore lol
 
+#define RED "\x1B[31m"
+#define BLUE "\x1B[34m"
+#define RESET "\x1B[0m"
+
 extern void dot_product(int size, double* vec1, double* vec2, double* result);
 
 // user input initialization of vectors
@@ -84,7 +88,7 @@ void test_small_vectors() {
     initialize_vectors_from_user(vec1, vec2, size);
 
     // compute and verify results
-    printf("\nDot Product Validation (size = %d)\n" , size);
+    printf(RED"\nDot Product Validation (size = %d)\n" RESET, size);
     //calculate_dot_product_c(size, vec1, vec2, &result_c);
     //dot_product(size, vec1, vec2, &sdot);
     //printf("C Implementation: %.3f ---- Assembly Implementation: %.3f\n", result_c, sdot);
@@ -100,7 +104,7 @@ void test_small_vectors() {
     printf("%.6f\n", avg_time_c-avg_time_asm);
 
     // checking of results if same or not
-    printf("Correctness: ");
+    printf(BLUE"Correctness: "RESET);
     if (fabs(result_c - sdot) < 1e-3) {
         printf("Results are consistent.\n");
     } else {
@@ -108,14 +112,14 @@ void test_small_vectors() {
     }
 
         //time analysis
-        printf("Time comparison: ");
+        printf(BLUE"Time comparison: "RESET);
         if (fabs(avg_time_asm < avg_time_c)) {
             printf("ASM Kernel runs runs faster than C Kernel.\n");
         } else if (fabs(avg_time_asm > avg_time_c)) {
             printf("C Kernel runs runs faster than ASM Kernel.\n");
         } else {
             // (fabs(avg_time_asm == avg_time_c))
-            printf("Time difference is too close to be compa OR time is equal.");
+            printf("Time difference is too close to be compared OR time is equal.");
         }
 
     // free allocated memory
@@ -144,7 +148,7 @@ void test_large_vectors() {
         // randomly initialize vectors
         auto_initialize_vectors(vec1, vec2, size);
 
-        printf("\nLarge Vector Computation (size = %d)\n", size);
+        printf(RED"\nLarge Vector Computation (size = %d)\n"RESET, size);
         printf("C Implementation:\n");
         double avg_time_c = compute_execution_time(calculate_dot_product_c, size, vec1, vec2, &result_c);
         printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_c, result_c);
@@ -157,7 +161,7 @@ void test_large_vectors() {
         printf("%.6f\n", avg_time_c-avg_time_asm);
 
        // checking of results if same or not
-        printf("Correctness: ");
+        printf(BLUE"Correctness: "RESET);
         if (fabs(result_c - sdot) < 1e-6) {
             //math.h: fabs computes absolute value
             //1e-6 is the tolerance level for comparision (10^{-6}). considers floating-point precision errors
@@ -167,14 +171,14 @@ void test_large_vectors() {
         }
 
         //time analysis
-        printf("Time comparison: ");
+        printf(BLUE"Time comparison: "RESET);
         if (fabs(avg_time_asm < avg_time_c)) {
             printf("ASM Kernel runs runs faster than C Kernel.\n");
         } else if (fabs(avg_time_asm > avg_time_c)) {
             printf("C Kernel runs runs faster than ASM Kernel.\n");
         } else {
             // (fabs(avg_time_asm == avg_time_c))
-            printf("Time difference is too close to be compa OR time is equal.");
+            printf("Time difference is too close to be compared OR time is equal.");
         }
 
         // free allocated memory

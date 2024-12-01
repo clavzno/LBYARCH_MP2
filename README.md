@@ -8,14 +8,25 @@ sdot = \sum_{i=1}^{n} a_i b_i = a_1*b_1 + a_2*b_2 + ... + a_n*b_n
 ## NOTE
 latest code is in branch w/-c
 
-## How to run
+## How to run - CLEAN
 nasm -f elf64 -o dot_product.o dot_product.asm
 gcc -std=c99 -c -o main.o main.c
 - -std=c99: uses c99 standard
 gcc -std=c99 -o main.exe main.o dot_product.o -lm
 - -lm: links math library to the executable
 main.exe
-- or ./main
+
+## How to run - DEBUG
+nasm -f elf64 -o dot_product.o dot_product.asm
+gcc -std=c99 -g -O0 -c -o main.o main.c
+gcc -std=c99 -g -O0 -o main_debug.exe main.o dot_product.o -lm
+./main_debug.exe
+
+## How to run - RELEASE
+nasm -f elf64 -o dot_product.o dot_product.asm
+gcc -std=c99 -O2 -s -c -o main.o main.c
+gcc -std=c99 -O2 -s -o main_release.exe main.o dot_product.o -lm
+./main_release.exe
 
 ## Commands that don't work
 nasm -f m64 dot_product.o dot_product.asm
