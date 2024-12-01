@@ -1,26 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h> //memory alloc
+// uses _aligned_malloc: useful for SIMD single instruction multiple data operations
+// uses _aligned_free: frees the memory that was allocated w the above instruction.
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
+// #include "timer.c" can't be used anymore lol
 
 extern void dot_product(int size, double* vec1, double* vec2, double* result);
 
 // user input initialization of vectors
 void initialize_vectors_from_user(double* vec1, double* vec2, int size) {
+    printf("Enter elements one at a time for each vector.\n");
     printf("Enter %d elements for vector 1:\n", size);
     for (int i = 0; i < size; i++) {
         printf("vec1[%d]: ", i);
         scanf("%lf", &vec1[i]);
+        printf("\n");
     }
 
     printf("Enter %d elements for vector 2:\n", size);
     for (int i = 0; i < size; i++) {
         printf("vec2[%d]: ", i);
         scanf("%lf", &vec2[i]);
+        printf("\n");
     }
 }
+
 
 // random initialization of large vectors
 void auto_initialize_vectors(double* vec1, double* vec2, int size) {
@@ -43,10 +50,11 @@ void calculate_dot_product_c(int size, double* vec1, double* vec2, double* resul
 double compute_execution_time(void (*dot_func)(int, double*, double*, double*), int size, double* vec1, double* vec2, double* result) {
     double total_duration = 0.0;
     for (int i = 0; i < 20; i++) {
-        clock_t start_time = clock();
+        clock_t start_time = clock(); // clock function returns processor time
         dot_func(size, vec1, vec2, result);
         clock_t end_time = clock();
-        total_duration += (double)(end_time - start_time) / CLOCKS_PER_SEC;
+        total_duration += (double)(end_time - start_time) / CLOCKS_PER_SEC; //add to overall duration
+        // CLOCKS_PER_SEC: const that represents the clock ticks into seconds
     }
     return total_duration / 20.0;
 }
@@ -127,6 +135,8 @@ void test_large_vectors() {
        // checking of results if same or not
         printf("Correctness: ");
         if (fabs(result_c - result_asm) < 1e-6) {
+            //math.h: fabs computes absolute value
+            //1e-6 is the tolerance level for comparision (10^{-6}). considers floating-point precision errors
             printf("Results are consistent.\n");
         } else {
             printf("Results do not match.\n");

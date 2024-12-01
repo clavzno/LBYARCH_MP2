@@ -5,14 +5,22 @@ ALEJANDRINO, VINCE ALEJSON VIERNES
 
 sdot = \sum_{i=1}^{n} a_i b_i = a_1*b_1 + a_2*b_2 + ... + a_n*b_n
 
+## NOTE
+latest code is in branch w/-c
+
 ## How to run
 nasm -f elf64 -o dot_product.o dot_product.asm
-
 gcc -std=c99 -c -o main.o main.c
-
+- -std=c99: uses c99 standard
 gcc -std=c99 -o main.exe main.o dot_product.o -lm
-
+- -lm: links math library to the executable
 main.exe
+- or ./main
+
+## Commands that don't work
+nasm -f m64 dot_product.o dot_product.asm
+gcc -c main.c -o main.obj -m64
+gcc -c -o main.exe main.o dot_product.o -lm
 
 ## Comparative Execution time and short analysis of the performance of the kernels
 
