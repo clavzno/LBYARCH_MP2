@@ -132,6 +132,9 @@ void test_large_vectors() {
         double avg_time_asm = compute_execution_time((void (*)(int, double*, double*, double*))dot_product, size, vec1, vec2, &result_asm);
         printf("Time: %.6f seconds --- Dot Product: %.3f\n", avg_time_asm, result_asm);
 
+        printf("C implementation vs ASM implmenetation time difference:");
+        printf("%.6f", avg_time_c-avg_time_asm);
+
        // checking of results if same or not
         printf("Correctness: ");
         if (fabs(result_c - result_asm) < 1e-6) {
