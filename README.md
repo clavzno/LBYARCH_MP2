@@ -19,12 +19,14 @@ main.exe
 ## How to run - DEBUG
 nasm -f elf64 -o dot_product.o dot_product.asm
 gcc -std=c99 -g -O0 -c -o main.o main.c
+- O0: no optimization
 gcc -std=c99 -g -O0 -o main_debug.exe main.o dot_product.o -lm
 ./main_debug.exe
 
 ## How to run - RELEASE
 nasm -f elf64 -o dot_product.o dot_product.asm
 gcc -std=c99 -O2 -s -c -o main.o main.c
+- O2: optimization level 2, high optimization
 gcc -std=c99 -O2 -s -o main_release.exe main.o dot_product.o -lm
 ./main_release.exe
 
