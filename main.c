@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h> //memory alloc
+// uses _aligned_malloc: useful for SIMD single instruction multiple data operations
+// uses _aligned_free: frees the memory that was allocated w the above instruction.
 #include <stdint.h>
 #include <math.h>
 #include <time.h>
@@ -47,6 +49,7 @@ double compute_execution_time(void (*dot_func)(int, double*, double*, double*), 
         dot_func(size, vec1, vec2, result);
         clock_t end_time = clock();
         total_duration += (double)(end_time - start_time) / CLOCKS_PER_SEC;
+        // CLOCKS_PER_SEC: const that represents the clock ticks into seconds
     }
     return total_duration / 20.0;
 }
@@ -102,8 +105,6 @@ void test_small_vectors() {
     calculate_dot_product_c(size, vec1, vec2, &result_c);
     dot_product(size, vec1, vec2, &result_asm);
     printf("C Implementation: %.3f ---- Assembly Implementation: %.3f\n", result_c, result_asm);
-	
-	
 
     // checking of results if same or not
     printf("Correctness: ");
