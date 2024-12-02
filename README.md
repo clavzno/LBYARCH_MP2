@@ -20,11 +20,11 @@
 - O0: no optimization
 
 ## How to run - RELEASE
-nasm -f elf64 -o dot_product.o dot_product.asm
-gcc -std=c99 -O2 -s -c -o main.o main.c
+1. nasm -f elf64 -o dot_product.o dot_product.asm
+2. gcc -std=c99 -O2 -s -c -o main.o main.c
+3. gcc -std=c99 -O2 -s -o main_release.exe main.o dot_product.o -lm
+4. ./main_release.exe OR main_release.exe
 - O2: optimization level 2, high optimization
-gcc -std=c99 -O2 -s -o main_release.exe main.o dot_product.o -lm
-./main_release.exe
 
 ## Raw Output Screenshots
 ![CLEAN](Screenshots/main_clean.png)
