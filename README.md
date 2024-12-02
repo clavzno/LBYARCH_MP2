@@ -31,19 +31,19 @@
 ![DEBUG](Screenshots/main_debug.png)
 
 ## Comparative Execution time and short analysis of the performance of the kernels
-![debug vs release](Screenshots\1_debug_vs_release.png)
-![comparative](Screenshots\2_comparative_execution_time.png)
+![DEBUG_VS_RELEASE](Screenshots/1_debug_vs_release.png)
+![COMPARATIVE](Screenshots/2_comparative_execution_time.png)
 
 ## Screenshot of the program output and correctness check (C and x86-64)
-![](Screenshots\3_correctness_check.png)
+![CORRECTNESSCHECK](Screenshots/3_correctness_check.png)
 
 ## Disclaimer - Processor
 - The processor used in the test has AMD Ryzen 7 5825U with Radeon Graphics 2.00GHz with 16.0 GB (14.8 GB usable)
 - GCC Version is 14.1.0
-![](Screenshots\4_disclaimer.png)
+![DISCLAIMER](Screenshots/4_disclaimer.png)
 
 ## MP Assignment Screenshot
-![](Screenshots\mp_crop.png)
+![MPSPECS](Screenshots/mp_crop.png)
 
 ## Short videos (5-10 minutes) showing the source code, compilation, execution of the C and x86-64 program
 - Youtube: https://youtu.be/yEa_ip2xw1I
